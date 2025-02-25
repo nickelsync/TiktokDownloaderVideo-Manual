@@ -12,6 +12,7 @@ class TikTokDownloader:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://www.tiktok.com/'
         }
         self.output_dir = "downloaded_videos"
         
@@ -46,68 +47,170 @@ class TikTokDownloader:
         return video_id
     
     def get_download_url(self, url):
-        """Mendapatkan URL unduhan tanpa watermark menggunakan musicaldown.com."""
+        """Mendapatkan URL unduhan tanpa watermark."""
         try:
             clean_url = self.clean_url(url)
             video_id = self.get_video_id(clean_url)
             
-            # Gunakan snibtiktok.com sebagai layanan untuk mendapatkan video tanpa watermark
-            api_url = f"https://api.snibtiktok.com/video/info?url={clean_url}"
-            
-            response = requests.get(api_url, headers=self.headers)
-            if response.status_code == 200:
-                data = response.json()
-                
-                if data.get("status") == "success":
-                    video_data = data.get("data", {})
-                    # Mencari video tanpa watermark
-                    download_url = video_data.get("video", {}).get("playAddr", "")
-                    
-                    if not download_url:
-                        download_url = video_data.get("video", {}).get("downloadAddr", "")
-                    
-                    if download_url:
-                        return download_url, video_id
-            
-            # Metode alternatif jika API di atas gagal
-            # Gunakan ssstik.io sebagai alternatif
-            print("Menggunakan metode alternatif...")
+            # Metode 1: Menggunakan ssstik.io
+            print("Mencoba menggunakan metode ssstik.io...")
             
             session = requests.Session()
             ssstik_url = "https://ssstik.io/id"
             response = session.get(ssstik_url, headers=self.headers)
             
-            # Dapatkan token CSRF dari halaman
-            soup = BeautifulSoup(response.text, "html.parser")
-            token = soup.find("input", {"name": "tt"}).get("value")
-            
-            form_data = {
-                "id": clean_url,
-                "locale": "id",
-                "tt": token
-            }
-            
-            download_page = session.post(
-                "https://ssstik.io/abc?url=dl",
-                headers={
-                    **self.headers,
-                    "Referer": "https://ssstik.io/id",
-                    "Accept": "*/*",
-                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                data=form_data
-            )
-            
-            if download_page.status_code == 200:
-                download_soup = BeautifulSoup(download_page.text, "html.parser")
-                download_links = download_soup.find_all("a", {"class": "download-link"})
+            if response.status_code != 200:
+                print(f"Error mengakses ssstik.io: {response.status_code}")
+                # Lanjut ke metode selanjutnya
+            else:
+                # Dapatkan token CSRF dari halaman
+                soup = BeautifulSoup(response.text, "html.parser")
+                token_input = soup.find("input", {"name": "tt"})
                 
-                for link in download_links:
-                    if "Tanpa Watermark" in link.text or "No Watermark" in link.text:
-                        return link["href"], video_id
+                if token_input:
+                    token = token_input.get("value")
+                    
+                    form_data = {
+                        "id": clean_url,
+                        "locale": "id",
+                        "tt": token
+                    }
+                    
+                    download_page = session.post(
+                        "https://ssstik.io/abc?url=dl",
+                        headers={
+                            **self.headers,
+                            "Referer": "https://ssstik.io/id",
+                            "Accept": "*/*",
+                            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                        data=form_data
+                    )
+                    
+                    if download_page.status_code == 200:
+                        download_soup = BeautifulSoup(download_page.text, "html.parser")
+                        download_links = download_soup.find_all("a", {"class": "download-link"})
+                        
+                        for link in download_links:
+                            if "Tanpa Watermark" in link.text or "No Watermark" in link.text:
+                                return link["href"], video_id
+                
+            # Metode 2: Menggunakan snaptik.app
+            print("Mencoba menggunakan metode snaptik.app...")
             
-            # Jika semua metode gagal, kembalikan None
+            snaptik_url = "https://snaptik.app/ID"
+            response = session.get(snaptik_url, headers=self.headers)
+            
+            if response.status_code != 200:
+                print(f"Error mengakses snaptik.app: {response.status_code}")
+            else:
+                # Dapatkan token dari halaman
+                soup = BeautifulSoup(response.text, "html.parser")
+                token_input = soup.select_one("input[name='token']")
+                
+                if token_input:
+                    token = token_input.get("value")
+                    
+                    form_data = {
+                        "url": clean_url,
+                        "token": token
+                    }
+                    
+                    response = session.post(
+                        "https://snaptik.app/ID/abc.php",
+                        headers={
+                            **self.headers,
+                            "Referer": "https://snaptik.app/ID",
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                        data=form_data
+                    )
+                    
+                    if response.status_code == 200:
+                        soup = BeautifulSoup(response.text, "html.parser")
+                        download_links = soup.select("a.abutton")
+                        
+                        for link in download_links:
+                            if "Tanpa Watermark" in link.text or "No Watermark" in link.text:
+                                return link["href"], video_id
+            
+            # Metode 3: Menggunakan tikmate.online
+            print("Mencoba menggunakan metode tikmate.online...")
+            
+            tikmate_url = "https://tikmate.online/"
+            response = session.get(tikmate_url, headers=self.headers)
+            
+            if response.status_code != 200:
+                print(f"Error mengakses tikmate.online: {response.status_code}")
+            else:
+                # Membuat permintaan unduhan
+                form_data = {
+                    "url": clean_url
+                }
+                
+                response = session.post(
+                    "https://tikmate.online/abc.php",
+                    headers={
+                        **self.headers,
+                        "Referer": "https://tikmate.online/",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    data=form_data
+                )
+                
+                if response.status_code == 200:
+                    try:
+                        result = response.json()
+                        if "hd" in result and result["hd"]:
+                            download_url = "https://tikmate.online/" + result["hd"]
+                            return download_url, video_id
+                    except:
+                        # Jika tidak berhasil sebagai JSON, coba parse sebagai HTML
+                        soup = BeautifulSoup(response.text, "html.parser")
+                        download_links = soup.select("a.download-link")
+                        
+                        for link in download_links:
+                            return "https://tikmate.online" + link["href"], video_id
+            
+            # Metode 4: Menggunakan savetikvideo.org
+            print("Mencoba menggunakan metode savetikvideo.org...")
+            
+            session = requests.Session()
+            save_url = "https://savetikvideo.org/"
+            response = session.get(save_url, headers=self.headers)
+            
+            if response.status_code != 200:
+                print(f"Error mengakses savetikvideo.org: {response.status_code}")
+            else:
+                form_data = {
+                    "tiktok-url": clean_url,
+                    "locale": "id"
+                }
+                
+                response = session.post(
+                    "https://savetikvideo.org/wp-json/aio-dl/video-data/",
+                    headers={
+                        **self.headers,
+                        "Referer": "https://savetikvideo.org/",
+                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    data=form_data
+                )
+                
+                if response.status_code == 200:
+                    try:
+                        data = response.json()
+                        if "medias" in data and len(data["medias"]) > 0:
+                            for media in data["medias"]:
+                                if "url" in media and "watermark" in media and not media["watermark"]:
+                                    return media["url"], video_id
+                    except:
+                        print("Error parsing savetikvideo.org response")
+            
+            # Jika semua metode gagal
+            print("Semua metode gagal. Tidak dapat menemukan URL unduhan.")
             return None, video_id
             
         except Exception as e:

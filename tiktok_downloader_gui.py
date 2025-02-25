@@ -135,12 +135,15 @@ class TikTokDownloaderApp:
             self.status_var.set("Mengambil informasi video...")
             self.update_progress(10)
             
+            # Tampilkan pesan pada UI
+            self.root.update_idletasks()
+            
             # Dapatkan URL unduhan dan ID video
             download_url, video_id = self.downloader.get_download_url(url)
             
             if not download_url:
                 self.status_var.set("Gagal mendapatkan URL unduhan")
-                messagebox.showerror("Error", "Tidak dapat menemukan URL unduhan video tanpa watermark.")
+                messagebox.showerror("Error", "Tidak dapat menemukan URL unduhan video tanpa watermark.\n\nCobalah URL TikTok yang berbeda atau periksa koneksi internet Anda.")
                 self.update_progress(0)
                 return
             
@@ -151,33 +154,41 @@ class TikTokDownloaderApp:
             self.update_progress(30)
             
             # Unduh video
-            response = requests.get(download_url, headers=self.downloader.headers, stream=True)
-            total_size = int(response.headers.get('content-length', 0))
-            
-            # Buat direktori jika belum ada
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
-            
-            downloaded_size = 0
-            with open(output_path, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=4096):
-                    if chunk:
-                        f.write(chunk)
-                        downloaded_size += len(chunk)
-                        progress = min(30 + int(70 * downloaded_size / total_size), 100)
-                        self.update_progress(progress)
-            
-            self.status_var.set(f"Video berhasil diunduh: {filename}")
-            self.update_progress(100)
-            
-            # Refresh daftar file
-            self.load_downloaded_files()
-            
-            # Reset progress setelah beberapa detik
-            self.root.after(3000, lambda: self.update_progress(0))
+            try:
+                response = requests.get(download_url, headers=self.downloader.headers, stream=True, timeout=30)
+                response.raise_for_status()  # Periksa status kode HTTP
+                
+                total_size = int(response.headers.get('content-length', 0))
+                
+                # Buat direktori jika belum ada
+                os.makedirs(os.path.dirname(output_path), exist_ok=True)
+                
+                downloaded_size = 0
+                with open(output_path, 'wb') as f:
+                    for chunk in response.iter_content(chunk_size=4096):
+                        if chunk:
+                            f.write(chunk)
+                            downloaded_size += len(chunk)
+                            progress = min(30 + int(70 * downloaded_size / max(total_size, 1)), 100)
+                            self.update_progress(progress)
+                
+                self.status_var.set(f"Video berhasil diunduh: {filename}")
+                self.update_progress(100)
+                
+                # Refresh daftar file
+                self.load_downloaded_files()
+                
+                # Reset progress setelah beberapa detik
+                self.root.after(3000, lambda: self.update_progress(0))
+                
+            except requests.exceptions.RequestException as req_err:
+                self.status_var.set(f"Error saat mengunduh: {str(req_err)}")
+                messagebox.showerror("Error Unduhan", f"Terjadi kesalahan saat mengunduh video:\n\n{str(req_err)}\n\nCobalah URL TikTok yang berbeda atau periksa koneksi internet Anda.")
+                self.update_progress(0)
             
         except Exception as e:
             self.status_var.set(f"Error: {str(e)}")
-            messagebox.showerror("Error", f"Terjadi kesalahan: {str(e)}")
+            messagebox.showerror("Error", f"Terjadi kesalahan saat memproses URL:\n\n{str(e)}\n\nPastikan Anda telah memasukkan URL TikTok yang valid.")
             self.update_progress(0)
 
 # Main function
