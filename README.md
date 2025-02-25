@@ -1,24 +1,29 @@
-# TikTok Downloader (Dengan Watermark)
+# TikTok Downloader (Mode Browser)
 
-Aplikasi Python untuk mengunduh video TikTok dengan watermark. Aplikasi ini menyediakan cara yang mudah dan cepat untuk menyimpan video TikTok ke komputer Anda. Tersedia dalam versi Command Line Interface (CLI) dan Graphical User Interface (GUI).
+Aplikasi sederhana untuk membantu mengunduh video TikTok dengan menggunakan browser Anda. Aplikasi ini dirancang untuk situasi di mana downloader otomatis tidak berfungsi karena pemblokiran API atau masalah koneksi.
+
+## Cara Kerja
+
+Aplikasi ini:
+1. Membantu membersihkan URL TikTok
+2. Membuka browser dengan URL video TikTok
+3. Menampilkan petunjuk langkah demi langkah untuk mengunduh video secara manual
+4. Mengelola video yang telah diunduh
 
 ## Fitur
 
-- Unduh video TikTok dengan watermark
-- Antarmuka pengguna grafis (GUI) mudah digunakan
-- Mode command line (CLI) untuk penggunaan cepat
-- Mendukung URL TikTok pendek dan panjang
-- Progress bar untuk memantau proses unduhan
-- Mengelola video yang diunduh
+- Antarmuka pengguna grafis yang sederhana dan mudah digunakan
+- Tombol "Paste URL" untuk cepat menempelkan URL dari clipboard
+- Daftar video yang telah diunduh dengan kemampuan pengelolaan
+- Instruksi jelas untuk mengunduh video secara manual
+- Tidak bergantung pada API pihak ketiga yang sering diblokir oleh ISP
 
 ## Persyaratan
 
 - Python 3.6 atau lebih baru
-- Paket yang diperlukan:
+- Paket Python yang diperlukan:
   - requests
-  - beautifulsoup4
-  - tqdm
-  - tkinter (sudah termasuk dalam sebagian besar instalasi Python)
+  - tkinter (biasanya sudah termasuk dalam instalasi Python)
 
 ## Instalasi
 
@@ -26,7 +31,7 @@ Aplikasi Python untuk mengunduh video TikTok dengan watermark. Aplikasi ini meny
 
 1. Install Python dari [python.org](https://www.python.org/downloads/) (centang "Add Python to PATH" saat instalasi)
 2. Download semua file project ini ke satu folder
-3. Double-click file `run-tiktok-downloader.bat` untuk menjalankan aplikasi
+3. Double-click file `run-simplest.bat` untuk menjalankan aplikasi
 
 ### Instalasi Manual
 
@@ -42,85 +47,60 @@ Aplikasi Python untuk mengunduh video TikTok dengan watermark. Aplikasi ini meny
    ```
 5. Install dependensi:
    ```
-   pip install requests beautifulsoup4 tqdm
+   pip install requests
    ```
 
-## Penggunaan
+## Cara Menggunakan
 
-### Mode GUI
-
-Untuk menjalankan aplikasi dengan antarmuka pengguna grafis:
-
-1. Double-click file `run-tiktok-downloader.bat`, atau
-2. Jalankan perintah dari Command Prompt:
+1. **Jalankan aplikasi** menggunakan `run-simplest.bat` atau dengan perintah:
    ```
-   python tiktok-gui-watermark.py
+   python tiktok-gui-simplest.py
    ```
 
-### Mode CLI
-
-Untuk mengunduh video menggunakan command line:
-
-```
-python tiktok-watermark.py "URL_VIDEO_TIKTOK"
-```
-
-Atau gunakan mode interaktif:
-
-```
-python tiktok-watermark.py
-```
-
-## Contoh Penggunaan
-
-1. **Salin URL video TikTok** dari aplikasi TikTok atau browser
+2. **Salin URL video TikTok** dari aplikasi TikTok atau browser
    - Format: `https://www.tiktok.com/@username/video/1234567890123456789`
    - Atau URL pendek: `https://vm.tiktok.com/XXXXX/`
 
-2. **Tempel URL** ke dalam aplikasi dan klik "Unduh Video"
+3. **Tempel URL** ke dalam aplikasi (atau gunakan tombol "Paste URL")
 
-3. **Video akan disimpan** ke folder "downloaded_videos"
+4. **Klik "Buka di Browser"**
+   - Browser akan terbuka dengan URL video TikTok
+   - Ikuti instruksi yang ditampilkan:
+     1. Tunggu video dimuat di browser
+     2. Klik kanan pada video
+     3. Pilih "Save Video As" atau "Simpan Video Sebagai"
+     4. Simpan ke folder "downloaded_videos"
 
-## Kemungkinan Masalah dan Solusi
+5. **Klik "Refresh"** untuk melihat video yang telah diunduh dalam daftar
 
-### URL Tidak Valid
+6. **Kelola video yang diunduh**:
+   - Double-click untuk membuka video
+   - Klik kanan untuk opsi lainnya (Buka Folder, Hapus File, dll.)
 
-- Pastikan URL dalam format yang benar
-- Pastikan video TikTok tidak diprivat atau dihapus
+## Pemecahan Masalah
 
-### Kegagalan Unduh
+### Tidak Dapat Melihat Opsi "Save Video As"
 
-- Periksa koneksi internet Anda
-- Coba URL video TikTok yang berbeda
-- Jika download otomatis gagal, aplikasi akan menawarkan metode manual:
-  1. Browser akan terbuka dengan URL TikTok
-  2. Klik kanan pada video dan pilih "Save Video As"
-  3. Simpan ke folder "downloaded_videos"
+- Periksa jika Anda menggunakan browser yang didukung (Chrome, Firefox, Edge)
+- Coba gunakan browser desktop, bukan mobile
+- Beberapa versi TikTok mungkin mencegah klik kanan; coba gunakan shortcut keyboard:
+  - Windows/Linux: Ctrl+S
+  - Mac: Command+S
 
-### File Hasil Unduhan Terlalu Kecil
+### Browser Tidak Terbuka
 
-- Aplikasi akan otomatis memeriksa apakah file yang diunduh valid
-- Jika file bukan video (misalnya HTML), aplikasi akan menghapusnya dan menampilkan pesan error
+- Pastikan Anda memiliki browser default yang ditetapkan di sistem
+- Coba buka URL secara manual jika browser tidak terbuka otomatis
 
-## Mengapa Dengan Watermark?
+### Video Tidak Muncul di Daftar Setelah Diunduh
 
-Aplikasi ini mengunduh video TikTok dengan watermark asli karena:
-
-1. **Lebih andal** - Tidak perlu menggunakan layanan pihak ketiga yang sering diblokir oleh ISP Indonesia
-2. **Lebih cepat** - Unduh langsung dari server TikTok
-3. **Lebih aman** - Tidak ada risiko menggunakan layanan tidak resmi
-4. **Legal** - Menghormati hak cipta dan ketentuan layanan TikTok
+- Klik tombol "Refresh" untuk memperbarui daftar
+- Pastikan Anda menyimpan video ke folder "downloaded_videos" yang benar
+- Verifikasi bahwa file berekstensi .mp4
 
 ## Catatan Penting
 
-- Aplikasi ini dibuat untuk tujuan pendidikan dan penggunaan pribadi
+- Aplikasi ini mengunduh video dengan watermark TikTok asli
+- Video diunduh secara manual melalui browser untuk menghindari pemblokiran API
 - Hormati hak cipta pembuat konten saat mengunduh video
-- Jangan mendistribusikan ulang video yang diunduh tanpa izin dari pemilik konten
-
-## Kontribusi
-
-Kontribusi, masalah, dan permintaan fitur dipersilakan. Jangan ragu untuk memeriksa halaman masalah jika Anda ingin berkontribusi.
-
-## Penafian
-
-Aplikasi ini tidak berafiliasi dengan TikTok atau ByteDance Ltd. Semua merek dagang yang disebutkan adalah milik dari pemiliknya masing-masing.
+- Aplikasi ini dibuat untuk tujuan pendidikan dan penggunaan pribadi

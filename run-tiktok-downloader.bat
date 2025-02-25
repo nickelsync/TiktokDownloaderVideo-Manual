@@ -2,7 +2,7 @@
 chcp 65001 > nul
 cls
 echo ===============================================
-echo    TIKTOK VIDEO DOWNLOADER (DENGAN WATERMARK)
+echo    TIKTOK VIDEO DOWNLOADER (MODE BROWSER)
 echo ===============================================
 echo.
 
@@ -15,15 +15,6 @@ if %errorlevel% neq 0 (
     echo.
     pause
     exit /b
-)
-
-REM Cek koneksi internet
-echo [INFO] Memeriksa koneksi internet...
-ping -n 1 www.google.com >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [WARNING] Koneksi internet mungkin bermasalah.
-    echo Aplikasi masih akan dilanjutkan, tetapi mungkin ada masalah saat mengunduh.
-    echo.
 )
 
 REM Cek apakah virtual environment sudah ada, jika belum buat baru
@@ -52,27 +43,18 @@ if %errorlevel% neq 0 (
     pip install requests
 )
 
-pip show beautifulsoup4 >nul 2>&1
-if %errorlevel% neq 0 (
-    pip install beautifulsoup4
+REM Salin file tiktok_downloader.py jika belum ada
+if exist tiktok-downloader-simple-final.py (
+    echo [INFO] Menyalin file downloader...
+    copy /Y tiktok-downloader-simple-final.py tiktok_downloader.py >nul
 )
 
-pip show tqdm >nul 2>&1
-if %errorlevel% neq 0 (
-    pip install tqdm
-)
-
-REM Jalankan downloader dalam mode interaktif
+REM Jalankan GUI
 echo.
 echo [INFO] Memulai TikTok Downloader...
 echo.
 
-REM Rename file jika tiktok-watermark.py yang ada
-if exist tiktok-watermark.py (
-    copy /Y tiktok-watermark.py tiktok_downloader.py >nul
-)
-
-python tiktok_downloader.py
+python tiktok-gui-simplest.py
 
 REM Nonaktifkan virtual environment
 call deactivate
