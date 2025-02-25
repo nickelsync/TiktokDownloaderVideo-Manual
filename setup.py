@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="tiktok-downloader-no-watermark",
+    name="tiktok-downloader-watermark",
     version="0.1.0",
-    description="TikTok Video Downloader tanpa watermark",
-    author="Anda",
-    author_email="email@anda.com",
+    description="TikTok Video Downloader watermark",
+    author="Nickel",
+    author_email="nickellodeoon@gmail.com",
     packages=find_packages(),
     install_requires=[
         "requests>=2.25.1",
