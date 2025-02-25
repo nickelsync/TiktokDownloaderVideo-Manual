@@ -1,6 +1,6 @@
 # TikTok Video Grabber
 
-Aplikasi sederhana untuk membantu mengunduh video TikTok menggunakan berbagai metode yang mudah dan efektif. Aplikasi ini dirancang untuk mengatasi berbagai batasan dalam mengunduh video TikTok, termasuk ketika klik kanan tidak berfungsi.
+Aplikasi sederhana untuk membantu mengunduh video TikTok menggunakan berbagai metode yang mudah dan efektif. Aplikasi ini dirancang untuk mengatasi berbagai batasan dalam mengunduh video TikTok.
 
 ## Fitur Utama
 
