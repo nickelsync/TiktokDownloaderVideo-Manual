@@ -37,7 +37,7 @@ Metode lanjutan menggunakan Developer Tools browser untuk menemukan URL video la
 
 1. Install Python dari [python.org](https://www.python.org/downloads/) (centang "Add Python to PATH" saat instalasi)
 2. Download semua file project ini ke satu folder
-3. Double-click file `run-tiktok-grabber.bat` untuk menjalankan aplikasi
+3. Double-click file `run.bat` untuk menjalankan aplikasi
 
 ### Instalasi Manual
 
@@ -56,10 +56,7 @@ Metode lanjutan menggunakan Developer Tools browser untuk menemukan URL video la
    ```
    pip install requests
    ```
-6. Jalankan aplikasi:
-   ```
-   python tiktok-video-grabber-online.py
-   ```
+6. Klik 2 kali pada run.bat
 
 ## Cara Menggunakan
 
